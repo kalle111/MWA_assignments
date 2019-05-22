@@ -6,12 +6,12 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!--<script src="https://unpkg.com/axios/dist/axios.min.js"></script>-->
     <!--<script src="C:\Users\kalle\Documents\mwa\Assignment REST\REST_1\libs\jquery-3.1.0.js"></script> -->
     <script>
         window.onload = function () {
             console.log('Beginne Selection-Fetch:');
-            //insertSelectionOptions();
+            preFetch();
         }
         var preFetch1 = "";
         //var preFetch = "";
@@ -32,26 +32,21 @@
         }
 
         function testGet() {
-            let searchConstraints = {id: "", name: "", address: "", customer_type: ""};
+            let searchConstraints = {id: "", name: "", address: "", customer_type: 10};
             searchConstraints.id = $("#filterFieldID")[0].value;
             //searchConstraints.id = this.document.getElementById("filterFieldID").value;
             searchConstraints.name = $("#filterFieldName")[0].value;
             searchConstraints.address = $("#filterFieldAddress")[0].value;
             searchConstraints.customer_type = $("#customer_type_selection").find(":selected").val();
-            //searchConstraints.name = this.document.getElementById("filterFieldName").value;
-            if(searchConstraints.id) {
-                console.log("Filterfield has input: " + searchConstraints.id);
-            } else {
-                console.log("Filterfield has no input");
-            }
-            //searchConstraints.name = $("#filterFieldName").val();
-            callAjax({url: "http://localhost:3031/allcustomers/", type : "GET", data : searchConstraints});
+            //basic ajax call with params
+            $('OutputDiv').html("");
+            callAjax({url: "http://localhost:3031/allcustomers/", type : "GET", data : searchConstraints}, "customerData");
                 
         }
         function handleData(result) {
             return result;
         }
-        function callAjax(param)
+        function callAjax(param, handleOption)
         {
             console.log("Ajax-Call-Funktion gestartet");
             let result = null;
@@ -62,16 +57,47 @@
                 method: param.type,
                 data: param.data
             }).done(function( data, textStatus, jqXHR){
-                console.log("result: ", data);
-                console.log("status code: ", jqXHR.status);
+                //console.log("result: ", data);
+                //console.log("status code: ", jqXHR.status);
+                if(handleOption == "customerData") {
+                    //console.log(data);
+                    //console.log(result);
+                    //console.log("== customerdata");
+                    fetchedCustomerDataHandler(data);
+                }
                 //handleData(result);
             }).fail(function(jqXHR, textStatus, errorThrown){
                 console.log("Call failed (AJAX-CALL failed): " + errorThrown);
                 console.log("status code: " + jqXHR.status);
             });
-            return result;
-        }
+            
+            function fetchedCustomerDataHandler(fetchedData) {
+                $('#OutputDiv')[0].innerHTML =""; //only one table
 
+                console.log("fetchedCustomerDataHandler accessed!");
+                let html = '<table id="outputTable" style="text-align:center; border: 1px solid black;padding-top:0px">';
+                html += '<b style="padding-bottom: 3px">Results:</b>';
+                html += '<tr>';
+                let flag = 0;
+                $.each(fetchedData[0], function(index, value){
+                    html += '<th>'+index+'</th>';
+                });
+                html += '</tr>';
+                $.each(fetchedData, function(index, value){
+                    html += '<tr>';
+                    $.each(value, function(index2, value2){
+                        html += '<td>'+value2+'</td>';
+                    });
+                    html += '<tr>';
+                });
+                html += '</table>';
+                $('#OutputDiv')[0].insertAdjacentHTML("beforeend",html);
+                $('#OutputDiv')[0].style.visibility = "visible";
+                
+            }
+            
+        }
+        //standalon AJAX-Call for PreFetching
         function preFetch()
         {
             console.log("PreFetching gestartet");
@@ -98,11 +124,11 @@
             //alert('jetzt kommt der consolelog');
             function dataHandler(rspns) {
                 var dropdown = this.document.getElementById("customer_type_selection");
-                let htmlSelection = "<option value=0></option>";
+                let htmlSelection = "<option value=" + 0 +"></option>";
                 console.log(rspns);
                // let htmlSelection = "<option value=0 selected></option>";
                 for(i = 0; i<rspns.length; i++) {
-                    htmlSelection += "<option value="+i+">"+rspns[i].Legend+"</options>";
+                    htmlSelection += "<option value="+(1+i)+">"+rspns[i].Legend+"</options>";
                 }
                 dropdown.innerHTML = htmlSelection;
             }
@@ -130,17 +156,16 @@
         <td><input id=filterFieldAddress type="text"></td>
         <td><select id="customer_type_selection">
             <option value=0 selected></option>
-            <option value=1>CustomerType1</option>
-            <option value=2>CustomerType2</option>
+            <option value=1></option>
+            <option value=2></option>
         </select></td>
     </tr>
     </table>
     <br>
     <button id="getAll" name="getall" type="button" onclick="testGet()" style="width: 250px; height:30px">Get Data</button>
-    <button id="getselectedprops" onclick="preFetch()">GetSelIndexJquery</button>
+    <button id="getselectedprops" onclick="preFetch()" style="visibility: hidden">GetSelIndexJquery</button>
 </div>
-<div id="OutputDiv" style="visibility: hidden">
-    something
+<div id="OutputDiv" style="visibility: hidden; padding-top: 20px">
 </div>
 </body>
 </html>

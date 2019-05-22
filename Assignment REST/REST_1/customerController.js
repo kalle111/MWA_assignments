@@ -19,7 +19,8 @@ var connection = mysql.createConnection({
   host     : '127.0.0.1',
   user     : 'root',  // Note! Do not use root credentials in production!
   password : '',
-  database : 'customers'
+  database : 'customers',
+  multipleStatements: false // Security reasons => sql injection risk.
 });
 
 let port = 3030;
@@ -27,24 +28,71 @@ console.log("Let's start using express...");
 console.log("connection-ping: " + connection.state);
 
 //functional support
-function getFullString(queryObj) {
-  for (var key in queryObj){
-    var attrName = key;
-    var attrValue = queryObj[key];
-    switch(attrName) {
-      case "id":
-        testPrint(attrName, attrValue);
-        break;
-      case "name":
+function getFullString(preparedStatement,queryObj) {
+  let whereSelection = "";
+  let andCounter = 0;
+
+  if((queryObj.id =="") && (queryObj.name == "") && (queryObj.address == "") && (queryObj.customer_type == 0)) {
+    console.log("##############################");
+    return (preparedStatement + "1");
+  } else {
+      console.log("Sufficient filters!!!!!!!!")
+      for (var key in queryObj){
+      var attrName = key;
+      var attrValue = queryObj[key];
+      if(andCounter>0) {
+        whereSelection += " AND ";
+      }
+      switch(attrName) {
+        case "id":
+          if(attrValue=="") {
+            whereSelection += " 1=1 ";
+            andCounter++;
+            continue;
+          } else {
+            whereSelection += " ID = " + connection.escape(queryObj[key]);
+            andCounter++;
+          }
           testPrint(attrName, attrValue);
-        break;
-      case "address":
-          testPrint(attrName, attrValue);
-        break;
-      case "customer_type":
-          testPrint(attrName, attrValue);
-        break;  
-    }
+          break;
+        case "name":
+            if(attrValue=="") {
+
+              whereSelection += " 1=1 ";
+              continue;
+            } else {
+              whereSelection += " Name = " + connection.escape(queryObj[key]);
+              andCounter++;
+            }
+            testPrint(attrName, attrValue);
+          break;
+        case "address":
+            if(attrValue=="") {
+
+              whereSelection += " 1=1 ";
+              continue;
+            } else {
+              whereSelection += " Address = " + connection.escape(queryObj[key]);
+              andCounter++;
+            }
+            testPrint(attrName, attrValue);
+          break;
+        case "customer_type":
+            if(attrValue==0) {
+  
+              whereSelection += " 1=1 ";
+              continue;
+            } else {
+              whereSelection += " Customer_Type = " + connection.escape(queryObj[key]);
+              andCounter++;
+            }
+            testPrint(attrName, attrValue);
+          break;  
+      }
+  }
+  let result = (preparedStatement + whereSelection + ";");
+  console.log("final SQL Statement:" + result);
+  return (result);
   }
 }
 
@@ -61,18 +109,19 @@ module.exports =
         console.log("### QUERY GET: fetchAll startet...");
         console.log(req.query);
         let base_query = 'SELECT * FROM customer WHERE';
-        let qString = "";
-        qString = getFullString(req.query);
+        //let qString = "";
+        let fullString = getFullString(base_query, req.query);
         /*let test_query = 'SELECT ID, Name, Phone_Number FROM customer WHERE ID=? AND Name=?';
         let c = req.query;*/
-        let id_constraint = (req.query.id) ? (" ID = " + req.query.id + " AND "):(" ");
+
+        /*let id_constraint = (req.query.id) ? (" ID = " + req.query.id + " AND "):(" ");
         let address_constraint = (req.query.address) ? ("Address = '" + req.query.address + "'"): ("1 AND ");
         let type_constraint = (req.query.custome_type) ? ("Customer_type = " + req.query.custome_type): ("1 AND ");
         let name_constraint = (req.query.name) ? ("Name='" + req.query.name + "';"): (" AND 1;");
         let full_query = base_query + id_constraint + address_constraint + name_constraint;
-        console.log(full_query);
+        console.log(full_query);*/
         //let query = 'SELECT ID, Name, Phone_Number FROM customer WHERE ID=' + req.query.id;
-        connection.query(full_query, function(error, results, fields){
+        connection.query(fullString, function(error, results, fields){
             if ( error ){
                 console.log("Error fetching data from db, reason: " + error);
                 res.send(error);
@@ -85,16 +134,16 @@ module.exports =
               }
         });
       },
-    fetchFiltered: function(req,res) {
+      fetchCustomerTypes: function(req,res) {
       //test  
         //console.log("....in customerController/fetchAll");
-        console.log("### PREFETCH SELECTION...");
+        
         //console.log(req.query);
         let base_query = 'SELECT * FROM customer WHERE';
         let qString = "SELECT * FROM customer_types WHERE 1;";
         //qString = getFullString(req.query);
-
-        console.log(qString);
+        console.log("### PREFETCHING Cust_type combobox => " + qString);
+        //console.log(qString);
         //let query = 'SELECT ID, Name, Phone_Number FROM customer WHERE ID=' + req.query.id;
         connection.query(qString, function(error, results, fields){
             if ( error ){

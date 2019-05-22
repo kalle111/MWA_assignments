@@ -49,7 +49,7 @@ app.route('/allcustomers/')
     .get(customerController.fetchAll);
 
 app.route('/customer_type_fetch/')
-    .get(customerController.fetchFiltered);
+    .get(customerController.fetchCustomerTypes);
     
 app.route('/task')
     .get(function(request, response){
