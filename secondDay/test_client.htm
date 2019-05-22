@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>Test client for REST api</title>
+    <script>
+        $(function () {
+
+            $("#testGet").button();
+            $("#testPost").button();
+            $("#testPut").button();
+            $("#testDelete").button();
+
+            $("#testGet").click(function() {
+                testGet();
+            });
+
+            $("#testPost").click(function() {
+                testPost();
+            });
+
+            $("#testPut").click(function() {
+                testPut();
+            });
+
+            $("#testDelete").click(function() {
+                testDelete();
+            });
+
+        });
+
+        function callAjax(param)
+        {
+            let result = null;
+
+            $.ajax(
+            {
+                url: param.url,
+                method: param.type,
+                data: param.data
+            }).done(function( data, textStatus, jqXHR){
+                result = data;
+                console.log("result: ", data);
+                console.log("status code: ", jqXHR.status);
+
+            }).fail(function(jqXHR, textStatus, errorThrown){
+
+                console.log("Call failed: " + errorThrown);
+            });
+
+            return result;
+        }
+
+        async function callAxios(param)
+        {
+            let result = null;
+            try
+            {
+                result = await axios({
+                    url: param.url,
+                    method: param.type,
+                    data: param.data
+                });
+
+                console.log("data: " , result.data);
+                console.log("status: " , result.status);
+            }
+            catch(error)
+            {
+                console.log("Error happened in axios call : ", error)
+            }
+
+            return result;
+        } 
+
+        function testGet() {
+
+            let searchConditions = "id=&name=&asty_avain=";
+            // or 
+            searchConditions = { id: "", name: "", asty_avain: "" };
+            callAjax({ url: "http://localhost:3001/asiakas", type : "GET", data : searchConditions});
+            //callAxios({ url: "http://localhost:3001/asiakas", type : "GET", data : searchConditions});
+        }
+
+        function testDelete() {
+            let data = { id: "", name: "", asty_avain: "" };
+            //let result = callAjax({ url: "http://localhost:3001/Asiakas/3", type : "DELETE", data : data});
+            let result = callAxios({ url: "http://localhost:3001/Asiakas/4", type : "DELETE", data : data});
+        }
+
+        function testPost() {
+            let data = { Nimi: "Mark Knopfler", Asty_avain: 2, Osoite: "Palo alto", Postinro : "99999", Postitmp : "San Jose" };            
+            //let result = callAjax({ url: "http://localhost:3001/Asiakas", type : "POST", data : data});
+            let result = callAxios({ url: "http://localhost:3001/Asiakas", type : "POST", data : data});
+        }
+
+        function testPut() {
+            let data = { Nimi: "Markus Westner", Asty_avain: 2, Osoite: "University street 1", Postinro : "00111", Postitmp : "Regensburg" };
+            data = "Nimi=kalle&Osoite=Regensburg";
+            //let result = callAjax({ url: "http://localhost:3001/Asiakas/7", type : "PUT", data : data});
+            let result = callAxios({ url: "http://localhost:3001/Asiakas/7", type : "PUT", data : data});
+        }
+
+
+    </script>
+</head>
+<body>
+    <button id="testGet">Test get</button>
+    <button id="testPost">Test post</button>
+    <button id="testPut">Test put</button>
+    <button id="testDelete">Test delete</button>
+</body>
+</html>
