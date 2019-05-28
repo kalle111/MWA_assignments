@@ -58,6 +58,13 @@ app.route('/task')
         response.end("Here are some tasks ... This is only an example of routing");     
     });
 
+app.route('/jquery')
+    .get(function(request,response){
+        response.statusCode = 200;
+        response.setHeader("Content-Type", "text/html");
+        response.sendFile("C:/Users/kalle/Documents/mwa/Assignment REST/REST_1/libs/jquery-3.1.0.js")
+    })
+
 /*  
 app.route('/Asiakas/:id')
         .put(customerController.update)
