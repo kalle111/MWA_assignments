@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>    
+<head>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <!--<script src="https://unpkg.com/axios/dist/axios.min.js"></script>-->
+    <!--<script src="C:\Users\kalle\Documents\mwa\Assignment REST\REST_1\libs\jquery-3.1.0.js"></script> -->
+    <script>
+        window.onload = function () {
+            console.log('Beginne Selection-Fetch:');
+            preFetch();
+        }
+        var preFetch1 = "";
+        //var preFetch = "";
+        
+        //click sendbutton as per jquery
+        $(document).ready(function() {
+            $("#sendButton").click(function(){
+                //onclick
+                var postdata = {
+                    "Name": "",
+                    "Phone_number": "",
+                    "Address": "",
+                    "Postal_Code": "",
+                    "City": "",
+                    "Customer_Type":""
+                }
+                postdata.Name =  $('#newCustomerName').val();
+                postdata.Phone_number = $('#newCustomerPhone').val();
+                postdata.Address = $('#newCustomerAdresse').val();
+                postdata.Postal_Code =  $('#newCustomerPlz').val();
+                postdata.City = $('#newCustomerCity').val();
+                var custType = $('#newCustomerType option:selected').val();
+
+                if(custType == undefined || custType == null || custType == "") {
+                    custType = "";
+                }
+                postdata.Customer_Type = custType;
+                
+                $.ajax(
+                 {
+                    url: "http://localhost:3031/customer/add/",
+                    method: "POST",
+                    data: postdata
+                }).done(function( data, textStatus, jqXHR){
+                    //callback if necessary;
+                    testGet();
+                    $("#status")[0].innerText = "Status: okay - successfully inserted data.";
+                    $('#userMessages')[0].style.backgroundColor = "lightgreen";
+                    //fetching data after successfully inserting it. 
+                    
+                }
+                //handleData(result);
+                ).fail(function(jqXHR, textStatus, errorThrown){
+                    console.log("Call failed (AJAX-CALL failed): " + errorThrown);
+                    console.log("status code: " + jqXHR.status);
+                    $("#status")[0].innerText = "Status: Adding a new user failed, please check all fields.";
+                    $('#userMessages')[0].style.backgroundColor = "salmon";
+                });
+            }); 
+        });
+
+        function insertSelectionOptions() {
+            console.log('inside insertSelectionOptions');
+            //Logic to pre-fetch selection data
+            let searchConstraints = "";
+            let result = "";
+            result = preFetch();
+            //console.log(result); => gibt null zurück
+            console.log("Result in Button-Func: ");
+            console.log(result);
+            /*let a = result.responseJSON;
+            console.log("neuer log: " + a.Legend);*/
+        }
+        function getSelectedIndex() {
+            console.log($("#customer_type").prop('selectedIndex'));
+        }
+
+        function toggleAddCustomerDiv() {
+            var visibilityAddUserDiv = $('#AddUserDiv')[0].style.visibility;
+
+            if(visibilityAddUserDiv == "hidden") {
+                console.log('will now be made visible');
+                $('#AddUserDiv')[0].style.visibility= "visible";
+                
+            } else {
+                $('#AddUserDiv')[0].style.visibility = "hidden";
+                
+            }
+        }
+
+        function testGet() {
+            let searchConstraints = {id: "", name: "", address: "", customer_type: 10};
+            searchConstraints.id = $("#filterFieldID")[0].value;
+            //searchConstraints.id = this.document.getElementById("filterFieldID").value;
+            searchConstraints.name = $("#filterFieldName")[0].value;
+            searchConstraints.address = $("#filterFieldAddress")[0].value;
+            searchConstraints.customer_type = $("#customer_type_selection").find(":selected").val();
+            //basic ajax call with params
+            $('OutputDiv').html("");
+            callAjax({url: "http://localhost:3031/allcustomers/", type : "GET", data : searchConstraints}, "customerData");
+                
+        }
+        function handleData(result) {
+            return result;
+        }
+        function callAjax(param, handleOption)
+        {
+            console.log("Ajax-Call-Funktion gestartet");
+            let result = null;
+            let result1 = "nothing";
+            result = $.ajax(
+            {
+                url: param.url,
+                method: param.type,
+                data: param.data
+            }).done(function( data, textStatus, jqXHR){
+                //console.log("result: ", data);
+                //console.log("status code: ", jqXHR.status);
+                if(handleOption == "customerData") {
+                    //console.log(data);
+                    //console.log(result);
+                    //console.log("== customerdata");
+                    fetchedCustomerDataHandler(data);
+                }
+                if ( $("#status")[0].innerText == "Status: okay - successfully inserted data.") {
+                    $("#status")[0].innerText += " + fetching.";
+                } else {
+                    $("#status")[0].innerText = "Status: Okay - fetching successfull";
+                    $('#userMessages')[0].style.backgroundColor = "lightgreen";
+                }
+                
+                //handleData(result);
+            }).fail(function(jqXHR, textStatus, errorThrown){
+                console.log("Call failed (AJAX-CALL failed): " + errorThrown);
+                console.log("status code: " + jqXHR.status);
+                $("#status")[0].innerText = "Status: Can't fetch DB-Data!!";
+                $('#userMessages')[0].style.backgroundColor = "salmon"
+            });
+            
+            function fetchedCustomerDataHandler(fetchedData) {
+                $('#OutputDiv')[0].innerHTML =""; //only one table
+
+                console.log("fetchedCustomerDataHandler accessed!");
+                let html = '<table id="outputTable" style="border: 1px solid black;padding-top:0px;background-color:white">';
+                html += '<b style="padding-bottom: 0px; text-align:left;background-color:#eee";>Results:</b>';
+                html += '<tr>';
+                let flag = 0;
+                $.each(fetchedData[0], function(index, value){
+                    html += '<th>'+index+'</th>';
+                });
+                html += '</tr>';
+                $.each(fetchedData, function(index, value){
+                    html += '<tr>';
+                    $.each(value, function(index2, value2){
+                        html += '<td>'+value2+'</td>';
+                    });
+                    html += '<tr>';
+                });
+                html += '</table>';
+                $('#OutputDiv')[0].insertAdjacentHTML("beforeend",html);
+                $('#OutputDiv')[0].style.visibility = "visible";
+                
+            }
+            
+        }
+        //standalon AJAX-Call for PreFetching
+        function preFetch()
+        {
+            console.log("PreFetching gestartet");
+            let result;
+            let responsetxt;
+
+            result = $.ajax(
+            {
+                url: "http://localhost:3031/customer_type_fetch/",
+                method: "GET",
+                data: "",
+                async: true
+            }).done( function( data, textStatus, jqXHR){
+                console.log("result: ", data);
+                console.log("status code: ", jqXHR.status);
+                //handleData(result);
+                console.log('####');
+                //console.log(result.responseText);
+                dataHandler(data);
+            }).fail(function(jqXHR, textStatus, errorThrown){
+                console.log("Call failed (AJAX-CALL failed): " + errorThrown);
+                console.log("status code: " + jqXHR.status);
+            });
+            //alert('jetzt kommt der consolelog');
+            function dataHandler(rspns) {
+                // ################Filter-Search
+                var dropdown = this.document.getElementById("customer_type_selection");
+                let htmlSelection1 = "<option value=" + 0 +"></option>";
+                let htmlSelection;
+                console.log(rspns);
+               // let htmlSelection = "<option value=0 selected></option>";
+                for(i = 0; i<rspns.length; i++) {
+                    htmlSelection += "<option value="+(1+i)+">"+rspns[i].Legend+"</options>";
+                }
+                dropdown.innerHTML = htmlSelection1 + htmlSelection;
+
+                // ################# AddNewUser Options.
+                var dropd = this.document.getElementById("newCustomerType");
+                dropd.innerHTML = htmlSelection; 
+            }
+            //let typeSelection = $("#customer_type_selection");
+            
+            //for(i = 0; i<result.length; i++)
+         }
+    </script>
+    <style>
+    .divs {
+	float: left;
+	
+	margin-right: 3.33333%;
+    margin-top: 20px;
+	padding: 20px;
+    padding-top:40px;
+	background: #eee;
+	box-sizing: border-box;
+    text-align:center; 
+    border: 1px solid black;
+    }
+    #userMessages {
+        margin-right:5%;
+        margin-top:5;
+        width: 55%;
+        background:lightgreen;
+        box-sizing: border-box;
+        text-align:center;     
+    }
+    </style>
+<title>Page Title</title>
+</head>
+<body>
+
+<div id="userMessages" class="alertsDev"><p id=status>Status: okay</p></div>
+
+<div id="FilterAndFetchDiv">
+    <table id="td1" style="text-align:center; border: 1px solid black;padding-top:0px">
+    Filter:
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Customer_Type</th>
+    </tr>
+    <tr>
+        <td><input id=filterFieldID type="text"></td>
+        <td><input id=filterFieldName type="text"></td>
+        <td><input id=filterFieldAddress type="text"></td>
+        <td><select id="customer_type_selection">
+            <option value=0 selected></option>
+            <option value=1></option>
+            <option value=2></option>
+        </select></td>
+    </tr>
+    </table>
+    <br>
+    <button id="getAll" name="getall" type="button" onclick="testGet()" style="width: 250px; height:30px;">Get Data</button>
+    <button id="addNewCustomer" name="addNewCustomer" type="button" onclick="toggleAddCustomerDiv()" style="width: 250px; height:30px;">Add new Customer</button>
+    <button id="getselectedprops" onclick="preFetch()" style="visibility: hidden">GetSelIndexJquery</button>
+</div>
+<div id="OutputDiv" class="divs" style="visibility: hidden; padding-top: 20px;"><b>Output:</b>
+</div>
+<div id="AddUserDiv" class="divs" style="visibility: hidden; padding-top: 20px;">
+<b style="margin-bottom:10px;">New User:</b>
+    <div id="newUserForm">
+        
+        <br>Name:
+        <br> <input id="newCustomerName" type="text" name="name" style="margin-bottom:5px">
+        <br>
+        Phone Number:
+        <br> <input id="newCustomerPhone" type="number" name="phone"style="margin-bottom:5px">
+        <br>
+        Address:
+        <br> <input id="newCustomerAdresse" type="text" name="adresse"style="margin-bottom:5px">
+        <br>
+        Postal Code:
+        <br> <input id="newCustomerPlz" type="number" name="plz"style="margin-bottom:5px">
+        <br>
+        City:
+        <br> <input id="newCustomerCity" type="text" name="city"style="margin-bottom:5px">
+        <br>
+        Customer Type:
+        <br>
+        <select id="newCustomerType" type = "text" name="newCustomerType" style="width: 165px;height: 25px;">
+        </select>
+        <br>
+        <br>
+        
+        <button id="sendButton" name="SendNewUserData" style="margin-right: 5px;">Send</input>
+        <button id="clearButton" type="button">Close</button>
+    </div>
+</div>
+</body>
+</html>

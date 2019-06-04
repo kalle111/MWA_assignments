@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html>
+    
+<head>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!--<script src="localhost:3031/jquery/jquery-3.1.0.js"></script>-->
+    <!--<script src="https://unpkg.com/axios/dist/axios.min.js"></script>-->
+    <!--<script src="C:\Users\kalle\Documents\mwa\Assignment REST\REST_1\libs\jquery-3.1.0.js"></script> -->
+    <script>
+        window.onload = function () {
+            console.log('Beginne Selection-Fetch:');
+            preFetch();
+        }
+
+
+        function insertSelectionOptions() {
+            console.log('inside insertSelectionOptions');
+            //Logic to pre-fetch selection data
+            let searchConstraints = "";
+            let result = "";
+            result = preFetch();
+            //console.log(result); => gibt null zurück
+            console.log("Result in Button-Func: ");
+            console.log(result);
+            /*let a = result.responseJSON;
+            console.log("neuer log: " + a.Legend);*/
+        }
+
+        function getSelectedIndex() {
+            console.log($("#customer_type").prop('selectedIndex'));
+        }
+
+        function testGet() {
+            let searchConstraints = {id: "", name: "", address: "", customer_type: 10};
+            searchConstraints.id = $("#filterFieldID")[0].value;
+            //searchConstraints.id = this.document.getElementById("filterFieldID").value;
+            searchConstraints.name = $("#filterFieldName")[0].value;
+            searchConstraints.address = $("#filterFieldAddress")[0].value;
+            searchConstraints.customer_type = $("#customer_type_selection").find(":selected").val();
+            //basic ajax call with params
+            $('OutputDiv').html("");
+            callAjax({url: "http://localhost:3031/allcustomers/", type : "GET", data : searchConstraints}, "customerData");
+                
+        }
+
+        //check if necessary 
+        function handleData(result) {
+            return result;
+        }
+
+        function deleteCustomer(customerID) {
+            console.log("Customer: [" + customerID + "] will be deleted now.");
+
+            result = $.ajax(
+            {
+                url: "http://localhost:3031/customer/delete/"+customerID,
+                method: "DELETE",
+                data: "",
+                async: true
+            }).done( function( data, textStatus, jqXHR){
+                console.log("Deletion result: ", data);
+                console.log("status code: ", jqXHR.status);
+                console.log("textStatus" + textStatus);
+                
+                console.log('####');
+             
+            }).fail(function(jqXHR, textStatus, errorThrown){
+                console.log("Call failed (AJAX-CALL failed): " + errorThrown);
+                alert('Deletion was not successful! Error: ' + errorThrown);
+                console.log("status code: " + jqXHR.status);
+            });
+            //Fetches all user-filtered results.
+            testGet();
+        }
+
+        function callAjax(param, handleOption)
+        {
+            console.log("Ajax-Call-Funktion gestartet");
+            let result = null;
+            let result1 = "nothing";
+            result = $.ajax(
+            {
+                url: param.url,
+                method: param.type,
+                data: param.data
+            }).done(function( data, textStatus, jqXHR){
+                //console.log("result: ", data);
+                //console.log("status code: ", jqXHR.status);
+                if(handleOption == "customerData") {
+                    fetchedCustomerDataHandler(data);
+                } else if (handleOption == "customerDeletion") {
+                    //handle response from Deletion
+
+                }
+                //handleData(result);
+            }).fail(function(jqXHR, textStatus, errorThrown){
+                console.log("Call failed (AJAX-CALL failed): " + errorThrown);
+                console.log("status code: " + jqXHR.status);
+            });
+            
+            function fetchedCustomerDataHandler(fetchedData) {
+                $('#OutputDiv')[0].innerHTML =""; //only one table
+
+                console.log("fetchedCustomerDataHandler accessed!");
+                let html = '<table id="outputTable" style="text-align:center; border: 1px solid black;padding-top:0px">';
+                html += '<b style="padding-bottom: 3px">Results:</b>';
+                html += '<tr>';
+                let flag = 0;
+                $.each(fetchedData[0], function(index, value){
+                    html += '<th>'+index+'</th>';
+                });
+                
+                
+                html += '<th>' + 'Delete Button' + "</th>";
+
+                html += '</tr>';
+                
+                $.each(fetchedData, function(index, value){
+                    //if(index==0) { let tempResultCustomerID = (value); }
+                    let customerID = fetchedData[index].ID; //case-sensitive
+                    
+
+                    html += '<tr>';
+                    $.each(value, function(index2, value2){
+                        
+                        html += '<td>'+value2+'</td>';
+                    });
+                    
+                    //insert column for deletion delButton
+                    html += '<td><button id="deleteButton'+customerID+'" onclick="deleteCustomer('+customerID+')"> Delete! </button></td>';
+                   
+                });
+                
+
+                html += '</table>';
+                $('#OutputDiv')[0].insertAdjacentHTML("beforeend",html);
+                $('#OutputDiv')[0].style.visibility = "visible";
+                
+            }
+            
+        }
+        //standalon AJAX-Call for PreFetching
+        function preFetch()
+        {
+            console.log("PreFetching gestartet");
+            let result;
+            let responsetxt;
+
+            result = $.ajax(
+            {
+                url: "http://localhost:3031/customer_type_fetch/",
+                method: "GET",
+                data: "",
+                async: true
+            }).done( function( data, textStatus, jqXHR){
+                console.log("result: ", data);
+                console.log("status code: ", jqXHR.status);
+                //handleData(result);
+                console.log('####');
+                //console.log(result.responseText);
+                dataHandler(data);
+            }).fail(function(jqXHR, textStatus, errorThrown){
+                console.log("Call failed (AJAX-CALL failed): " + errorThrown);
+                console.log("status code: " + jqXHR.status);
+            });
+            //alert('jetzt kommt der consolelog');
+            function dataHandler(rspns) {
+                var dropdown = this.document.getElementById("customer_type_selection");
+                let htmlSelection = "<option value=" + 0 +"></option>";
+                console.log(rspns);
+               // let htmlSelection = "<option value=0 selected></option>";
+                for(i = 0; i<rspns.length; i++) {
+                    htmlSelection += "<option value="+(1+i)+">"+rspns[i].Legend+"</options>";
+                }
+                dropdown.innerHTML = htmlSelection;
+            }
+            //let typeSelection = $("#customer_type_selection");
+            
+            //for(i = 0; i<result.length; i++)
+         }
+    </script>
+<title>Page Title</title>
+</head>
+<body>
+
+<div id="FilterAndFetchDiv">
+    <table id="td1" style="text-align:center; border: 1px solid black;padding-top:0px">
+    Filter:
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Customer_Type</th>
+    </tr>
+    <tr>
+        <td><input id=filterFieldID type="text"></td>
+        <td><input id=filterFieldName type="text"></td>
+        <td><input id=filterFieldAddress type="text"></td>
+        <td><select id="customer_type_selection">
+            <option value=0 selected></option>
+            <option value=1></option>
+            <option value=2></option>
+        </select></td>
+    </tr>
+    </table>
+    <br>
+    <button id="getAll" name="getall" type="button" onclick="testGet()" style="width: 250px; height:30px">Get Data</button>
+    <button id="getselectedprops" onclick="preFetch()" style="visibility: hidden">GetSelIndexJquery</button>
+</div>
+<div id="OutputDiv" style="visibility: hidden; padding-top: 20px">
+</div>
+</body>
+</html>
