@@ -15,7 +15,6 @@
             preFetch();
         }
 
-
         function insertSelectionOptions() {
             console.log('inside insertSelectionOptions');
             //Logic to pre-fetch selection data
@@ -43,21 +42,125 @@
             //basic ajax call with params
             $('OutputDiv').html("");
             callAjax({url: "http://localhost:3031/allcustomers/", type : "GET", data : searchConstraints}, "customerData");
-                
         }
 
         //check if necessary 
         function handleData(result) {
             return result;
         }
+        
+        //remove after testing.
+        function testGetCustomerInfo(customerID) {
+            var a = '';
+           getCustomerInfo(customerID).done(function(value) {
+                a = value;
+            }); 
+            console.log("Zweitfunktion-Result:");
+            console.log(a);
+        }
+        function updateCustomer(customerID, buttonClicked) {
+            // update cID
+            // First fetch data that should be displayed
+            let data; 
+            
 
+            buttonClicked.style.visibility = "hidden";
+            console.log("0parentele: " + buttonClicked); //button
+            console.log("1parentele: " + buttonClicked.parentElement); //cell
+            console.log("2parentele: " + buttonClicked.parentElement.parentElement); //row
+            console.log("2parentele: " + buttonClicked.parentElement.parentElement); //table
+            let rowElement = buttonClicked.parentElement.parentElement;
+            let rowIndex = rowElement.rowIndex;
+            let colIndex = rowElement.cells.length;
+            console.log("Rowindex => " + rowIndex);
+            let tableEle = rowElement.parentElement;
+
+            //Insert row after the one with the clicked button
+            let newRow = tableEle.insertRow(rowIndex+1);
+            newRow.style.backgroundColor = "lightgrey";
+
+
+            //tableEle.parentElement.insertAfter("hello.");
+            //console.log(tableEle.id);
+            getCustomerInfo(customerID).done(function(value) {
+                data = value;
+                for (i = 0; i<colIndex; i++) {
+                let cell1 = newRow.insertCell(i);
+                cell1.innerHTML = " ";
+                if(i == colIndex-1) {
+                    cell1.innerHTML = `<button id=saveButton${customerID} onclick=updateCustomer(${customerID}) style="width:100%;backgroundColor:"lightgrey""> save  </button>`;
+                } else if(i != 0) {
+                    let defaultVal;
+                    switch(i) {
+                        case 1:
+                            defaultVal=`value="${data[0].Name}"`;
+                            break;
+                        case 2: 
+                            defaultVal=`value="${data[0].Phone_Number}"`;
+                            break;
+                        case 3:
+                            defaultVal=`value="${data[0].Address}"`;
+                            break;
+                        case 4:
+                            defaultVal=`value="${data[0].Postal_Code}"`;
+                            break;
+                        case 5:
+                            defaultVal=`value="${data[0].City}"`;
+                            break;
+                        case 6:
+                            defaultVal=`value="${data[0].Legend}"`;
+                            break;
+                    }
+                    cell1.innerHTML = `<input style="width:120px;text-align:center;" ${defaultVal}></input>`;
+                }
+            }
+
+            });  
+ 
+            
+            
+            
+
+        }
+        
+        function getCustomerInfo(customerID) {
+            console.log("GET custID info: " + customerID);
+            
+            var dataResult = '';
+            let result;
+            result = $.ajax(
+                {
+                    url: `http://localhost:3031/customer/info/${customerID}`,
+                    method:"GET",
+                    data:"",
+                    async: false
+                }
+            ).done(function(data, textStatus, jqXHR){
+                //console.log("before callback1");
+                //console.log(data);
+            }).fail(function(jqXHR,textStatus,errorThrown) {
+                console.log('getcustomerInfo was not successful: ' + errorThrown);
+
+            });
+            /*
+            function dataCallback(data){
+                dataResult = data;
+                //console.log("right in callback function");
+                //console.log(dataResult);
+                //console.log(result.responseJSON);
+            }
+            console.log("after callback");
+            */          
+
+            return result;
+        }
         function deleteCustomer(customerID) {
             console.log("Customer: [" + customerID + "] will be deleted now.");
-
+            
             result = $.ajax(
             {
-                url: "http://localhost:3031/customer/delete/"+customerID,
-                method: "DELETE",
+                url: "http://localhost:3031/customer/update/"+customerID,
+                method: "UPDATE",
                 data: "",
                 async: true
             }).done( function( data, textStatus, jqXHR){
@@ -78,7 +181,7 @@
 
         function callAjax(param, handleOption)
         {
-            console.log("Ajax-Call-Funktion gestartet");
+            //console.log("Ajax-Call-Funktion gestartet");
             let result = null;
             let result1 = "nothing";
             result = $.ajax(
@@ -103,8 +206,6 @@
             
             function fetchedCustomerDataHandler(fetchedData) {
                 $('#OutputDiv')[0].innerHTML =""; //only one table
-
-                console.log("fetchedCustomerDataHandler accessed!");
                 let html = '<table id="outputTable" style="text-align:center; border: 1px solid black;padding-top:0px">';
                 html += '<b style="padding-bottom: 3px">Results:</b>';
                 html += '<tr>';
@@ -113,28 +214,19 @@
                     html += '<th>'+index+'</th>';
                 });
                 
-                
-                html += '<th>' + 'Delete Button' + "</th>";
-
+                html += '<th>' + '' + "</th>";
                 html += '</tr>';
                 
                 $.each(fetchedData, function(index, value){
                     //if(index==0) { let tempResultCustomerID = (value); }
                     let customerID = fetchedData[index].ID; //case-sensitive
-                    
-
                     html += '<tr>';
                     $.each(value, function(index2, value2){
-                        
                         html += '<td>'+value2+'</td>';
                     });
-                    
                     //insert column for deletion delButton
-                    html += '<td><button id="deleteButton'+customerID+'" onclick="deleteCustomer('+customerID+')"> Delete! </button></td>';
-                   
+                    html += '<td><button id="updateButton'+customerID+'" onclick="updateCustomer('+customerID+',this)">update</button></td>';
                 });
-                
-
                 html += '</table>';
                 $('#OutputDiv')[0].insertAdjacentHTML("beforeend",html);
                 $('#OutputDiv')[0].style.visibility = "visible";
@@ -156,30 +248,23 @@
                 data: "",
                 async: true
             }).done( function( data, textStatus, jqXHR){
-                console.log("result: ", data);
-                console.log("status code: ", jqXHR.status);
-                //handleData(result);
-                console.log('####');
-                //console.log(result.responseText);
                 dataHandler(data);
             }).fail(function(jqXHR, textStatus, errorThrown){
                 console.log("Call failed (AJAX-CALL failed): " + errorThrown);
                 console.log("status code: " + jqXHR.status);
             });
-            //alert('jetzt kommt der consolelog');
+
             function dataHandler(rspns) {
                 var dropdown = this.document.getElementById("customer_type_selection");
                 let htmlSelection = "<option value=" + 0 +"></option>";
-                console.log(rspns);
+                console.log(JSON.stringify(rspns));
                // let htmlSelection = "<option value=0 selected></option>";
                 for(i = 0; i<rspns.length; i++) {
                     htmlSelection += "<option value="+(1+i)+">"+rspns[i].Legend+"</options>";
                 }
                 dropdown.innerHTML = htmlSelection;
             }
-            //let typeSelection = $("#customer_type_selection");
-            
-            //for(i = 0; i<result.length; i++)
+
          }
     </script>
 <title>Page Title</title>
@@ -211,6 +296,33 @@
     <button id="getselectedprops" onclick="preFetch()" style="visibility: hidden">GetSelIndexJquery</button>
 </div>
 <div id="OutputDiv" style="visibility: hidden; padding-top: 20px">
+</div>
+<div id="editUserDiv" style="visibility: visible;padding-top:10px;">
+        
+    <br>Name:
+    <br> <input id="newCustomerName" type="text" name="name" style="margin-bottom:5px">
+    <br>
+    Phone Number:
+    <br> <input id="newCustomerPhone" type="number" name="phone"style="margin-bottom:5px">
+    <br>
+    Address:
+    <br> <input id="newCustomerAdresse" type="text" name="adresse"style="margin-bottom:5px">
+    <br>
+    Postal Code:
+    <br> <input id="newCustomerPlz" type="number" name="plz"style="margin-bottom:5px">
+    <br>
+    City:
+    <br> <input id="newCustomerCity" type="text" name="city"style="margin-bottom:5px">
+    <br>
+    Customer Type:
+    <br>
+    <select id="newCustomerType" type = "text" name="newCustomerType" style="width: 165px;height: 25px;">
+    </select>
+    <br>
+    <br>
+    
+    <button id="sendButton" name="SendNewUserData" style="margin-right: 5px;">Save</input>
+    <button id="clearButton" type="button">Close</button>
 </div>
 </body>
 </html>

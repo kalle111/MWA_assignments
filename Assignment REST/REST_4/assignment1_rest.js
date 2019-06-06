@@ -25,23 +25,12 @@ app.use(express.json());
 // Middleware: Reads HTTP request + creates body block
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-//app.use(express.static('public'));
+//instantly make all files in /public/ as public => index.html will be rendered upon calling domain/
+app.use(express.static('public'));
 
-app.get('/', function(req, res) {
+/*app.get('/', function(req, res) {
     res.sendFile(__dirname + '/main.html');
-});
-
-app.get('/new', function(req, res) {
-    res.sendFile(__dirname + '/some.html');
-});
-/*
-app.get("", function(req, res) {
-    //this method is a request handler.
-    res.setHeader("Content-Type", "text/html");
-    res.sendFile("C:/Users/kalle/Documents/mwa/Assignment REST/REST_1/main.html");
-    res.end();
 });*/
-
 
 
 // REST API Asiakas
@@ -59,6 +48,13 @@ app.route('/task')
     });
 app.route('/customer/delete/:id')
     .delete(customerController.deleteCustomer);
+
+app.route('/customer/update/:id')
+    .delete(customerController.deleteCustomer);
+
+app.route('/customer/info/:id')
+    
+    .get(customerController.getCustomer);
 /*
 app.route('/customer/delete/')
     .get(customerController.delete);

@@ -33,10 +33,10 @@ function getFullString(preparedStatement,queryObj) {
   let andCounter = 0;
 
   if((queryObj.id =="") && (queryObj.name == "") && (queryObj.address == "") && (queryObj.customer_type == 0)) {
-    console.log("##############################");
+    //console.log("##############################");
     return (preparedStatement + "1");
   } else {
-      console.log("Sufficient filters!!!!!!!!")
+      //console.log("Sufficient filters!!!!!!!!")
       for (var key in queryObj){
       var attrName = key;
       var attrValue = queryObj[key];
@@ -96,6 +96,7 @@ function getFullString(preparedStatement,queryObj) {
   }
 }
 
+//remove after testing
 function testPrint(attrName, attrValue) {
   console.log("FullString-Func: key => " + attrName + ": VAlue => " + attrValue);
 }
@@ -105,22 +106,10 @@ function testPrint(attrName, attrValue) {
 module.exports = 
 {
     fetchAll: function(req, res) {
-        //console.log("....in customerController/fetchAll");
         console.log("### QUERY GET: fetchAll startet...");
-        //console.log(req.query);
         let base_query = 'SELECT * FROM customer WHERE';
-        //let qString = "";
         let fullString = getFullString(base_query, req.query);
-        /*let test_query = 'SELECT ID, Name, Phone_Number FROM customer WHERE ID=? AND Name=?';
-        let c = req.query;*/
 
-        /*let id_constraint = (req.query.id) ? (" ID = " + req.query.id + " AND "):(" ");
-        let address_constraint = (req.query.address) ? ("Address = '" + req.query.address + "'"): ("1 AND ");
-        let type_constraint = (req.query.custome_type) ? ("Customer_type = " + req.query.custome_type): ("1 AND ");
-        let name_constraint = (req.query.name) ? ("Name='" + req.query.name + "';"): (" AND 1;");
-        let full_query = base_query + id_constraint + address_constraint + name_constraint;
-        console.log(full_query);*/
-        //let query = 'SELECT ID, Name, Phone_Number FROM customer WHERE ID=' + req.query.id;
         connection.query(fullString, function(error, results, fields){
             if ( error ){
                 console.log("Error fetching data from db, reason: " + error);
@@ -128,23 +117,15 @@ module.exports =
               }
               else
               {
-                //console.log("Data = " + JSON.stringify(results));
                 res.statusCode = 200;
                 res.send(results);
               }
         });
       },
       fetchCustomerTypes: function(req,res) {
-      //test  
-        //console.log("....in customerController/fetchAll");
-        
-        //console.log(req.query);
         let base_query = 'SELECT * FROM customer WHERE';
         let qString = "SELECT * FROM customer_types WHERE 1;";
-        //qString = getFullString(req.query);
         console.log("### PREFETCHING Cust_type combobox => " + qString);
-        //console.log(qString);
-        //let query = 'SELECT ID, Name, Phone_Number FROM customer WHERE ID=' + req.query.id;
         connection.query(qString, function(error, results, fields){
             if ( error ){
                 console.log("Error fetching data from db, reason: " + error);
@@ -157,30 +138,36 @@ module.exports =
                 res.send(results);
               }
         });
-        /*
-        implement logic for dynamic Customer_types!!!!!
-        a.) write window.onload()-function in main.html
-          a.a.) create basic onload-function => ajax-call
-          a.b.) write 
-        */
     },
     fetchSelectionData: function(req,res) {
-        //res.setHeader('Content-Type', 'json');
         console.log("GET-query" + req.query);
         let query = "SELECT * FROM customer;";
-        //console.log("Pre-Fetch: " + query);
         connection.query(query, function(error, results, fields) {
-          if(error) {
-            //console.log("SElection-Filter Get-Query is not working!" + erroor);
+          if(error) {;
             res.statusCode = 418; //teapot
             res.send(error);
           } else {
-            //console.log("Pre-fetched-Selection-data => " + JSON.stringify(results));
             res.statusCode = 200;
             res.send(results);
           }
         });
     },
+    getCustomer: function(req,res) {
+      console.log(">> GET Customer info for CustID: "+ req.params.id);
+      let getSQLString = `SELECT customer.ID, customer.Name, customer.Phone_Number, customer.Address, customer.Postal_Code, customer.City, customer.Customer_Type, customer_types.Legend FROM customer INNER JOIN customer_types WHERE ID = ${req.params.id} AND customer.Customer_Type = customer_types.TypeID ;`;
+      //SELECT * FROM `customer` INNER JOIN customer_types WHERE customer.ID = 1 AND customer.Customer_Type = customer_types.TypeID;
+      console.log("> " + getSQLString);
+      connection.query(getSQLString, function(err,result,fields) {
+        if(err) {
+          console.log("Error in SQL-query + " + err);
+          res.send(err);
+        } else {
+          res.statusCode = 200; //everything's fine
+          res.send(result);
+        }
+      });
+    }
+    ,
     deleteCustomer: function(req, res) {
       console.log("------------------\nDELETE CUSTOMER\n");
       console.log("Req-Query: "+JSON.stringify(req.query));
