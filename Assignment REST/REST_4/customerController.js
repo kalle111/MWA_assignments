@@ -115,6 +115,7 @@ module.exports =
               }
               else
               {
+                console.log(assignment1_rest.dataVersion);
                 res.statusCode = 200;
                 res.send(results);
               }

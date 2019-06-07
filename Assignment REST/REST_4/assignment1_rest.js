@@ -35,7 +35,7 @@ function log(req,res,next) {
     next();
 }
 
-// REST API Asiakas
+// REST API 
 app.route('/allcustomers/') 
     .get(customerController.fetchAll);
 
