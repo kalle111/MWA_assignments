@@ -4,6 +4,11 @@
     
 <head>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style>
+    .newEntry {
+        background-color: lightyellow   ;
+    }
+    </style>
     <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <!--<script src="localhost:3031/jquery/jquery-3.1.0.js"></script>-->
@@ -11,7 +16,6 @@
     <!--<script src="C:\Users\kalle\Documents\mwa\Assignment REST\REST_1\libs\jquery-3.1.0.js"></script> -->
     <script>
         window.onload = function () {
-            console.log('Beginne Selection-Fetch:');
             preFetch();
         }
 
@@ -63,69 +67,88 @@
             // First fetch data that should be displayed
             let data; 
             
-
             buttonClicked.style.visibility = "hidden";
-            console.log("0parentele: " + buttonClicked); //button
-            console.log("1parentele: " + buttonClicked.parentElement); //cell
-            console.log("2parentele: " + buttonClicked.parentElement.parentElement); //row
-            console.log("2parentele: " + buttonClicked.parentElement.parentElement); //table
             let rowElement = buttonClicked.parentElement.parentElement;
             let rowIndex = rowElement.rowIndex;
             let colIndex = rowElement.cells.length;
-            console.log("Rowindex => " + rowIndex);
             let tableEle = rowElement.parentElement;
 
             //Insert row after the one with the clicked button
             let newRow = tableEle.insertRow(rowIndex+1);
-            newRow.style.backgroundColor = "lightgrey";
+            newRow.style.backgroundColor = "lightyellow";
 
 
             //tableEle.parentElement.insertAfter("hello.");
             //console.log(tableEle.id);
             getCustomerInfo(customerID).done(function(value) {
                 data = value;
+                let parseData;
                 for (i = 0; i<colIndex; i++) {
-                let cell1 = newRow.insertCell(i);
-                cell1.innerHTML = " ";
-                if(i == colIndex-1) {
-                    cell1.innerHTML = `<button id=saveButton${customerID} onclick=updateCustomer(${customerID}) style="width:100%;backgroundColor:"lightgrey""> save  </button>`;
-                } else if(i != 0) {
-                    let defaultVal;
-                    switch(i) {
-                        case 1:
-                            defaultVal=`value="${data[0].Name}"`;
-                            break;
-                        case 2: 
-                            defaultVal=`value="${data[0].Phone_Number}"`;
-                            break;
-                        case 3:
-                            defaultVal=`value="${data[0].Address}"`;
-                            break;
-                        case 4:
-                            defaultVal=`value="${data[0].Postal_Code}"`;
-                            break;
-                        case 5:
-                            defaultVal=`value="${data[0].City}"`;
-                            break;
-                        case 6:
-                            defaultVal=`value="${data[0].Legend}"`;
-                            break;
+                    let cell1 = newRow.insertCell(i);
+                    cell1.innerHTML = `<b class="newEntry"> </b>`;
+                    if(i == colIndex-1) {
+                        cell1.innerHTML = `<button class="" id=saveButton${customerID} onclick="saveUpdatedCustomer(${customerID}, this)" style="width:100%;"> save  </button>`;
+                    } else if(i != 0) {
+                        let defaultVal;
+                        switch(i) {
+                            case 1:
+                                defaultVal=`value="${data[0].Name}"`;
+                                break;
+                            case 2: 
+                                defaultVal=`value="${data[0].Phone_Number}"`;
+                                break;
+                            case 3:
+                                defaultVal=`value="${data[0].Address}"`;
+                                break;
+                            case 4:
+                                defaultVal=`value="${data[0].Postal_Code}"`;
+                                break;
+                            case 5:
+                                defaultVal=`value="${data[0].City}"`;
+                                break;
+                            case 6:
+                                defaultVal=`value="${data[0].Customer_Type} - ${data[0].Legend}"`;
+                                break;
+                        }
+                        cell1.innerHTML = `<input class="newEntry" style="width:150px;text-align:center; background-color:"#eeee" ${defaultVal}></input>`;
                     }
-                    cell1.innerHTML = `<input style="width:120px;text-align:center;" ${defaultVal}></input>`;
                 }
-            }
-
             });  
- 
-            
-            
-            
-
         }
+
+        function saveUpdatedCustomer(customerID, saveButton) {
+
+            let nRow = saveButton.parentElement.parentElement;
+            let nTable = nRow.parentElement;
+            let rowIndex = nRow.rowIndex;
+            let colIndex = nRow.cells.length;
+            let cType = nRow.cells[6].children[0].value.split("-");
+            let rowdata = {
+                "Name" : nRow.cells[1].children[0].value,
+                "Phone_Number" : nRow.cells[2].children[0].value,
+                "Address" : nRow.cells[3].children[0].value,
+                "Postal_Code" : nRow.cells[4].children[0].value,
+                "City" : nRow.cells[5].children[0].value,
+                "Customer_Type" : cType[0].trim()
+            };
+            //post data
         
-        function getCustomerInfo(customerID) {
-            console.log("GET custID info: " + customerID);
             
+            result = $.ajax(
+                {
+                    url: `http://localhost:3031/customer/update/${customerID}`,
+                    method: "PUT",
+                    data: rowdata,
+                    async: false
+                }
+            ).done(function(data, textStatus,jqXHR) {
+                testGet();
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.log('Update => User request: was not successful:'+ JSON.stringify(jqXHR.responseText));
+            });
+        }
+
+        function getCustomerInfo(customerID) {
             var dataResult = '';
             let result;
             result = $.ajax(
@@ -136,24 +159,12 @@
                     async: false
                 }
             ).done(function(data, textStatus, jqXHR){
-                //console.log("before callback1");
-                //console.log(data);
             }).fail(function(jqXHR,textStatus,errorThrown) {
                 console.log('getcustomerInfo was not successful: ' + errorThrown);
-
             });
-            /*
-            function dataCallback(data){
-                dataResult = data;
-                //console.log("right in callback function");
-                //console.log(dataResult);
-                //console.log(result.responseJSON);
-            }
-            console.log("after callback");
-            */          
-
             return result;
         }
+
         function deleteCustomer(customerID) {
             console.log("Customer: [" + customerID + "] will be deleted now.");
             
@@ -237,7 +248,7 @@
         //standalon AJAX-Call for PreFetching
         function preFetch()
         {
-            console.log("PreFetching gestartet");
+            //console.log("PreFetching gestartet");
             let result;
             let responsetxt;
 
@@ -257,7 +268,7 @@
             function dataHandler(rspns) {
                 var dropdown = this.document.getElementById("customer_type_selection");
                 let htmlSelection = "<option value=" + 0 +"></option>";
-                console.log(JSON.stringify(rspns));
+                //console.log(JSON.stringify(rspns));
                // let htmlSelection = "<option value=0 selected></option>";
                 for(i = 0; i<rspns.length; i++) {
                     htmlSelection += "<option value="+(1+i)+">"+rspns[i].Legend+"</options>";

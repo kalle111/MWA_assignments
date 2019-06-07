@@ -24,8 +24,6 @@ var connection = mysql.createConnection({
 });
 
 let port = 3030;
-console.log("Let's start using express...");
-console.log("connection-ping: " + connection.state);
 
 //functional support
 function getFullString(preparedStatement,queryObj) {
@@ -33,10 +31,8 @@ function getFullString(preparedStatement,queryObj) {
   let andCounter = 0;
 
   if((queryObj.id =="") && (queryObj.name == "") && (queryObj.address == "") && (queryObj.customer_type == 0)) {
-    //console.log("##############################");
     return (preparedStatement + "1");
   } else {
-      //console.log("Sufficient filters!!!!!!!!")
       for (var key in queryObj){
       var attrName = key;
       var attrValue = queryObj[key];
@@ -91,7 +87,6 @@ function getFullString(preparedStatement,queryObj) {
       }
   }
   let result = (preparedStatement + whereSelection + ";");
-  console.log("final SQL Statement:" + result);
   return (result);
   }
 }
@@ -100,13 +95,16 @@ function getFullString(preparedStatement,queryObj) {
 function testPrint(attrName, attrValue) {
   console.log("FullString-Func: key => " + attrName + ": VAlue => " + attrValue);
 }
-
+function containsIllegalInput(x) {
+  //console.log(x);
+  return (!x);
+}
 
 //
 module.exports = 
 {
     fetchAll: function(req, res) {
-        console.log("### QUERY GET: fetchAll startet...");
+        //console.log("### QUERY GET: fetchAll startet...");
         let base_query = 'SELECT * FROM customer WHERE';
         let fullString = getFullString(base_query, req.query);
 
@@ -125,7 +123,6 @@ module.exports =
       fetchCustomerTypes: function(req,res) {
         let base_query = 'SELECT * FROM customer WHERE';
         let qString = "SELECT * FROM customer_types WHERE 1;";
-        console.log("### PREFETCHING Cust_type combobox => " + qString);
         connection.query(qString, function(error, results, fields){
             if ( error ){
                 console.log("Error fetching data from db, reason: " + error);
@@ -133,14 +130,13 @@ module.exports =
               }
               else
               {
-                console.log("Data = " + JSON.stringify(results));
+                //console.log("Data = " + JSON.stringify(results));
                 res.statusCode = 200;
                 res.send(results);
               }
         });
     },
     fetchSelectionData: function(req,res) {
-        console.log("GET-query" + req.query);
         let query = "SELECT * FROM customer;";
         connection.query(query, function(error, results, fields) {
           if(error) {;
@@ -152,11 +148,42 @@ module.exports =
           }
         });
     },
+    updateCustomerData: function(req,results) {
+      //console.log("updating customer data...");
+      //console.log(req.params.id);
+      //console.log(req.body);
+      let sqlUpdateString= `UPDATE customer SET Name=?, Phone_Number=?, Address=?, Postal_Code=?, City=?, Customer_Type=? WHERE ID = ${req.params.id}`;
+      let escapeArray = [req.body.Name, req.body.Phone_Number, req.body.Address, req.body.Postal_Code, req.body.City, Number(req.body.Customer_Type)];
+      console.log(sqlUpdateString);
+      
+      if(escapeArray.some(containsIllegalInput) === false)
+      {
+        //input is good
+        connection.query(sqlUpdateString, escapeArray, function(err,result,fields) {
+          if(err) {
+            //console.log(fields);
+            console.log("Error in Update-SQL-Query: " + err);
+            results.statusCode = 400;
+            results.send(err);
+          } else {
+            results.statusCode = 204;
+            results.send();
+          }
+        });
+      } else {
+        //input is bad
+        results.statusCode = 420;
+        let err = new Error('Not all fields were entered!!!');
+        console.log(err);
+        results.send("ERROR: ### ILLEGAL INPUT ###");
+      }
+      
+    },
     getCustomer: function(req,res) {
-      console.log(">> GET Customer info for CustID: "+ req.params.id);
+      //console.log(">> GET Customer info for CustID: "+ req.params.id);
       let getSQLString = `SELECT customer.ID, customer.Name, customer.Phone_Number, customer.Address, customer.Postal_Code, customer.City, customer.Customer_Type, customer_types.Legend FROM customer INNER JOIN customer_types WHERE ID = ${req.params.id} AND customer.Customer_Type = customer_types.TypeID ;`;
       //SELECT * FROM `customer` INNER JOIN customer_types WHERE customer.ID = 1 AND customer.Customer_Type = customer_types.TypeID;
-      console.log("> " + getSQLString);
+      //console.log("> " + getSQLString);
       connection.query(getSQLString, function(err,result,fields) {
         if(err) {
           console.log("Error in SQL-query + " + err);
@@ -166,8 +193,7 @@ module.exports =
           res.send(result);
         }
       });
-    }
-    ,
+    },
     deleteCustomer: function(req, res) {
       console.log("------------------\nDELETE CUSTOMER\n");
       console.log("Req-Query: "+JSON.stringify(req.query));
@@ -202,10 +228,10 @@ module.exports =
       res.send("CREATE POST");
     },
     create: function(req, res){
-        console.log("------------------");
-        console.log("CREATE");
+        //console.log("------------------");
+        //console.log("CREATE");
   
-          console.log("body : " + JSON.stringify(req.body));
+          //console.log("body : " + JSON.stringify(req.body));
           let c = req.body;
   
           connection.query('INSERT INTO  customer VALUES (?, ?, ?, ?, CURDATE(), ?)', [c.Nimi, c.Osoite, c.Postinro, c.Postitmp, c.Asty_avain],
@@ -216,7 +242,7 @@ module.exports =
             }
             else
             {
-              console.log("Data = " + JSON.stringify(results));
+              //console.log("Data = " + JSON.stringify(results));
               res.statusCode = 201;
               c.Avain = results.insertId;
               res.json(c);

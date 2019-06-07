@@ -18,20 +18,22 @@ var allowCrossDomain = function(req, res, next) {
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     next();
 }
-
 app.use(allowCrossDomain);
-app.use(express.json());
 
 // Middleware: Reads HTTP request + creates body block
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.json());
 //instantly make all files in /public/ as public => index.html will be rendered upon calling domain/
 app.use(express.static('public'));
+//logg all Requests
+app.use(log);
 
-/*app.get('/', function(req, res) {
-    res.sendFile(__dirname + '/main.html');
-});*/
-
+//logging middleware
+function log(req,res,next) {
+    console.log(new Date(), req.method,req.url);
+    next();
+}
 
 // REST API Asiakas
 app.route('/allcustomers/') 
@@ -50,10 +52,9 @@ app.route('/customer/delete/:id')
     .delete(customerController.deleteCustomer);
 
 app.route('/customer/update/:id')
-    .delete(customerController.deleteCustomer);
+    .put(customerController.updateCustomerData);
 
 app.route('/customer/info/:id')
-    
     .get(customerController.getCustomer);
 /*
 app.route('/customer/delete/')
