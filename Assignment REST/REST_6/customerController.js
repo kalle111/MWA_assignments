@@ -117,7 +117,7 @@ module.exports =
               }
               else
               {
-                console.log(assignment1_rest.dataVersion);
+                //console.log(assignment1_rest.dataVersion);
                 res.cookie("dataVersion", assignment1_rest.dataVersion);
                 res.statusCode = 200;
                 res.send(results);
@@ -156,12 +156,12 @@ module.exports =
       //console.log("updating customer data...");
       //console.log(req.params.id);
       //console.log(req.body);
-      console.log("cookies.dataVersion:");
-      console.log(req.cookies.dataVersion);
+      console.log("Checking if cookies.dataVersion is up-to-date: v" + req.cookies.dataVersion);
+
       if(req.cookies.dataVersion == assignment1_rest.dataVersion) {
           let sqlUpdateString= `UPDATE customer SET Name=?, Phone_Number=?, Address=?, Postal_Code=?, City=?, Customer_Type=? WHERE ID = ${req.params.id}`;
           let escapeArray = [req.body.Name, req.body.Phone_Number, req.body.Address, req.body.Postal_Code, req.body.City, Number(req.body.Customer_Type)];
-          console.log(sqlUpdateString);
+          //console.log(sqlUpdateString);
           
           if(escapeArray.some(containsIllegalInput) === false)
           {

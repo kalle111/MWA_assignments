@@ -33,7 +33,7 @@ app.use(express.static('public'));
 //logg all Requests
 app.use(log);
 //check DataVersion
-app.use(lastDBUpdate);
+
 
 //logging middleware
 function log(req,res,next) {
@@ -44,10 +44,7 @@ function log(req,res,next) {
 const dataVersion = 0; //set after first update, checked before next get 
 module.exports.dataVersion = dataVersion;
 
-function lastDBUpdate(req,res,next) {
-    console.log("lastDBup");
-    next();
-}
+
 
 // REST API Asiakas
 app.route('/allcustomers/') 

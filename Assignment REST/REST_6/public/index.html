@@ -8,6 +8,14 @@
     .newEntry {
         background-color: lightyellow   ;
     }
+    #userMessages {
+        margin-right:5%;
+        margin-top:5;
+        width: 55%;
+        background:lightgreen;
+        box-sizing: border-box;
+        text-align:center;     
+    }
     </style>
     <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -281,7 +289,10 @@
 <title>1_6 REST</title>
 </head>
 <body>
-
+<div id="userMessages" class="alertsDev">
+    <p id=status>Status: okay</p>
+    <p id=assignment>Assignment 1.6: Inserted a cookie-parser in order to have a dataVersion-Control. Update => dataversion++, Get => Browser updates DataVersion</p>
+</div>
 <div id="FilterAndFetchDiv">
     <table id="td1" style="text-align:center; border: 1px solid black;padding-top:0px">
     Filter:

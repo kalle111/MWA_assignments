@@ -197,8 +197,6 @@ module.exports =
           }
           
       }
-
-
       let c = req.body;
       var a = [c.Name, parseInt(c.Phone_number), c.Address, parseInt(c.Postal_Code), c.City, c.Customer_Type];
       //console.log(a);
