@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+    <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/Redmond/jquery-ui.css">
+    <title>{{title}}</title>
+    <style>
+        table {
+            text-align:center;
+            border: 1px solid black;
+            
+        }
+        tr {
+            margin-inline: 5px;
+            text-align: center;
+            border-right: 1px solid black;
+        }
+        th {
+            width:110px;
+            margin-inline: 5px;
+            padding-top: 5px;
+            text-align: center;
+            border-bottom: 1px solid black;
+        }
+        td {
+            border-right: 1px solid black;
+        }
+        body {
+            background-color: white;
+        }
+        .wrapper1 {
+            display: grid;
+            grid-template-columns: 1fr 4fr 1fr;
+        }
+        .box {
+            background-color: rgb(255,215,0);
+            margin: 5px;
+        }
+        .head {
+            grid-row: 1;
+            grid-column: 1 / span 3;
+            text-align: right;
+            padding: 5px;
+            padding-top: 20px;
+            padding-bottom: 30px;
+            
+        }
+        .body {
+            grid-row: 2;
+            padding: 5px;
+            padding-top: 25px;
+            padding-bottom: 15px;
+            padding-left: 7px;
+            
+            
+        }
+        .bodycontent {
+            margin-left: 10px;
+        }
+        .bottom {
+            padding-top: 25px;
+            padding-bottom: 40px;
+    
+            grid-column: 1 / span 3;
+            grid-row: 3;
+    
+            text-align: center;
+        }
+        .mainBodyLinks {
+            margin-left: 45px;
+        }
+        .select {
+            margin-left: 20px;
+        }
+        .bodymiddle {
+            padding-left: 20px;
+        }
+
+        #playerteam_left {
+            width: 49%;
+            float:left;
+            margin-right: 5px;
+
+        }
+        #playerteam_right {
+            width: 49%;
+            
+        }
+        
+    </style>
+</head>
+<body>
+<div class="wrapper1">
+    <div class="box head">
+        Welcome to Football-pages!
+        <select class="select selecthead">something
+            <option id=choose>Choose...</option>
+            {{#each selectOption}}
+                <option>{{this.optionName}}</option>
+            {{/each}}
+        </select>
+    </div>
+    <div class="box body bodyleft">
+        <a class="bodycontent mainBodyLinks" href="/leaguetable">League Table</a><br>
+        <a class="bodycontent mainBodyLinks" href="/playerdetails">Players & teams</a><br>
+        <a class="bodycontent mainBodyLinks" href="">News</a><br>
+        <a class="bodycontent mainBodyLinks" href="">Trades</a><br>
+        <a class="bodycontent mainBodyLinks" href="/assignment">Main-Assignmentspage</a><br>
+
+    </div>
+    <div class="box body bodymiddle">
+        <b>{{title}}: {{assignmentDesc}}</b>
+        
+        {{#if leaguetable}}
+            <br><br>
+            <table >
+                <th>Place</th>
+                <th>TeamID</th>
+                <th>Team Name</th>
+                <th>Games played</th>
+                <th>Won</th>
+                <th>Tied</th>
+                <th>Lost</th>
+                <th>Goals scored</th>
+                <th>Goals conceded</th>
+                <th>Points</th>
+                {{#each leaguetable}}
+                <tr><td>{{this.Team_id}}</td><td>{{this.Id}}</td><td>{{this.Name}}</td><td>{{this.Played_games}}</td><td>{{this.Won}}</td><td>{{this.Drawn}}</td><td>{{this.Lost}}</td><td>{{this.Goals_for}}</td><td>{{this.Goals_againts}}</td><td>{{this.Points}}</td>
+                </tr>
+                {{/each}}
+            </table>
+        {{/if}}
+        {{#if playerDetails}}
+        <br><br>
+        <table id="playerteam_left">
+            <th>PlayerID</th>
+            <th>TeamID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Number</th>
+            {{#each playerDetails}}
+            <tr><td>{{this.Id}}</td><td>{{this.Team_id}}</td><td>{{this.Firstname}}</td><td>{{this.Lastname}}</td><td>{{this.Number}}</td>
+            </tr>
+            {{/each}}
+        </table>
+        {{/if}}
+        {{#if teamDetails}}
+        <table id="playerteam_right">
+            <th>TeamID</th>
+            <th>Name</th>
+            <th>City</th>
+            <th>Founded in</th>
+            {{#each teamDetails}}
+            <tr><td>{{this.Id}}</td><td>{{this.Name}}</td><td>{{this.City}}</td><td>{{this.Founded_year}}</td>
+            </tr>
+            {{/each}}
+        </table>
+        {{/if}}
+        
+    </div>
+    <div class="box body bodyright">
+        <b>Next Events: </b>
+        <div>
+            {{#each events}}
+                <p>{{this.Datum}}: {{this.EventName}}</p>
+            {{/each}}
+        </div>
+    </div>
+    <div class="box bottom">
+        Contact information
+    </div>
+</div>
+</body>
+</html>

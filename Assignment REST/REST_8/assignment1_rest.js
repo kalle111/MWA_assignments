@@ -54,7 +54,7 @@ function log(req,res,next) {
 function ownHeader(req,res,next){
     let timeNow = (Date.now()/1000); //UNIX-time in seconds
     let timeDiff = timeNow-startTime;
-    res.setHeader('KALLE-SERVER-TIME', Math.round(timeDiff));
+    res.setHeader('X-Server-Up-Time', Math.round(timeDiff));
     next();
 }
 
@@ -64,17 +64,10 @@ app.route('/allcustomers/')
 
 app.route('/customer_type_fetch/')
     .get(customerController.fetchCustomerTypes);
-    
-app.route('/task')
-    .get(function(request, response){
-        response.statusCode = 200;
-        response.setHeader('Content-Type', 'text/plain');
-        response.end("Here are some tasks ... This is only an example of routing");     
-    });
 app.route('/customer/delete/:id')
-    .post(customerController.getCustomerForDelete)
-    .post(customerController.addPhoneToBlocked)
-    .post(customerController.deleteCustomer);
+    .delete(customerController.getCustomerForDelete)
+    .delete(customerController.addPhoneToBlocked)
+    .delete(customerController.deleteCustomer);
 
 app.route('/customer/add/')
     .post(customerController.createCustomer);

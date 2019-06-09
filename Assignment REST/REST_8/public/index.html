@@ -53,7 +53,7 @@
                 postdata.Postal_Code =  $('#newCustomerPlz').val();
                 postdata.City = $('#newCustomerCity').val();
                 var custType = $('#newCustomerType option:selected').val();
-
+                console.log("blablbalbalajö" + custType);
                 if(custType == undefined || custType == null || custType == "") {
                     custType = "";
                 }
@@ -99,7 +99,7 @@
         }
 
         function testGet() {
-            let searchConstraints = {id: "", name: "", address: "", customer_type: 10};
+            let searchConstraints = {id: "", name: "", address: "", customer_type: 0};
             searchConstraints.id = $("#filterFieldID")[0].value;
             //searchConstraints.id = this.document.getElementById("filterFieldID").value;
             searchConstraints.name = $("#filterFieldName")[0].value;
@@ -223,7 +223,7 @@
             result = await $.ajax(
             {
                 url: "http://localhost:3031/customer/delete/"+customerID,
-                method: "POST",
+                method: "DELETE",
                 data: "",
                 async: false
             }).done( function( data, textStatus, jqXHR){

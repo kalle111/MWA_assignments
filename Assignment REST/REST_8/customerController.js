@@ -136,8 +136,8 @@ module.exports =
                 res.send(results);
               }
         });
-      },
-      fetchCustomerTypes: function(req,res) {
+    },
+    fetchCustomerTypes: function(req,res) {
       //test  
         //console.log("....in customerController/fetchAll");
         
@@ -167,23 +167,6 @@ module.exports =
           a.b.) write 
         */
     },
-    fetchSelectionData: function(req,res) {
-        //res.setHeader('Content-Type', 'json');
-        //console.log("GET-query" + req.query);
-        let query = "SELECT * FROM customer;";
-        //console.log("Pre-Fetch: " + query);
-        connection.query(query, function(error, results, fields) {
-          if(error) {
-            //console.log("SElection-Filter Get-Query is not working!" + erroor);
-            res.statusCode = 418; //teapot
-            res.send(error);
-          } else {
-            //console.log("Pre-fetched-Selection-data => " + JSON.stringify(results));
-            res.statusCode = 200;
-            res.send(results);
-          }
-        });
-    },
     deleteCustomer: function(req, res) {
       console.log("------------------\nDELETE CUSTOMER\n");
       /*console.log("Req-Query: "+JSON.stringify(req.query));
@@ -199,13 +182,21 @@ module.exports =
       connection.query(sqlDelete, function(error, results, fields){
         if ( error ){
             console.log("Error deleting data from db, reason: " + error);
-            res.send(error);
+            deletionObj = {
+              "deletion" : "error",
+              "errorInfo" : error
+            }
+            res.json(error);
           }
           else
           {
             //console.log("Data = " + JSON.stringify(results));
-            res.statusCode = 204; //no content as response.
-            res.send();
+            res.statusCode = 200; //no content as response.
+            deletionObj = {
+              "deletion" : "success",
+              "deletedObject" : req.params
+            }
+            res.json(deletionObj);
           }
     });
     },
@@ -237,41 +228,22 @@ module.exports =
           //console.log("Data = " + JSON.stringify(results));
           res.statusCode = 200;
           c.Name = results.Name;
-          res.json(c);
+          let creationObj = {
+            "creationStatus" : "successful",
+            "createdObject" : req.body
+          } 
+          res.json(creationObj);
         }
       })
-    },
-    create: function(req, res){
-        //console.log("------------------");
-        //console.log("CREATE");
-  
-          console.log("body : " + JSON.stringify(req.body));
-          let c = req.body;
-  
-          connection.query('INSERT INTO  customer VALUES (?, ?, ?, ?, CURDATE(), ?)', [c.Nimi, c.Osoite, c.Postinro, c.Postitmp, c.Asty_avain],
-            function(error, results, fields){
-            if ( error ){
-              console.log("Error when inserting data to db, reason: " + error);
-              
-              res.json(error);
-            }
-            else
-            {
-              console.log("Data = " + JSON.stringify(results));
-              res.statusCode = 201;
-              c.Avain = results.insertId;
-              res.json(c);
-            }
-        });
       },
       updateCustomerData: function(req,results) {
         //console.log("Checking if cookies.dataVersion is up-to-date: v" + req.cookies.dataVersion);
-        
         //check if shown Data-Version is equal to Server-Side Dataversion...
         if(req.cookies.dataVersion == assignment1_rest.dataVersion) {
           let sqlUpdateString= `UPDATE customer SET Name=?, Phone_Number=?, Address=?, Postal_Code=?, City=?, Customer_Type=? WHERE ID = ${req.params.id}`;
           let escapeArray = [req.body.Name, req.body.Phone_Number, req.body.Address, req.body.Postal_Code, req.body.City, Number(req.body.Customer_Type)];
-          //console.log(sqlUpdateString);
+          console.log(escapeArray);
+          console.log(sqlUpdateString);
           
           
           if(escapeArray.some(containsIllegalInput) === false)
@@ -286,8 +258,12 @@ module.exports =
               } else {
                 assignment1_rest.dataVersion++;
                 results.cookie("dataVersion", assignment1_rest);
-                results.statusCode = 204;
-                results.send();
+                results.statusCode = 200;
+                updatedObj = {
+                  "updateStatus":"success",
+                  "updatedObject": escapeArray
+                }
+                results.json(updatedObj);
               }
             });
           } else {
@@ -373,28 +349,7 @@ module.exports =
       }
 }   
 // middleware
-//public is the folder name in the structure
-/*app.use(express.static("public"));
 
-app.get('/', function(req, res) {
-    res.sendFile('C:/Users/kalle/Documents/mwa/Assignment REST/REST_1/main.html');
-});
-
-
-app.get("/json", function(req,res) {
-    res.send({name: "Jon Doe", address: "RGB"});
-});
-
-*/
-
-// 
-/*
-router.get('/main', function(req, res) {
-    res.setHeader("Content-Type", "text/html");
-    res.sendFile('C:/Users/kalle/Documents/mwa/Assignment REST/REST_1/main.html');
-    res.end();
-});
-*/
 // make the localhost listen to further instructions/input
 console.log('is this point actually reached?');
 app.listen(port, () => {

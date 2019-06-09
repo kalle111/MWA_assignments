@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+    <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/Redmond/jquery-ui.css">
+    <title>{{title}}</title>
+    <style>
+        body {
+            background-color: white;
+        }
+        .wrapper1 {
+            display: grid;
+            grid-template-columns: 1fr 4fr 1fr;
+        }
+        .box {
+            background-color: rgb(255,215,0);
+            margin: 5px;
+        }
+        .head {
+            grid-row: 1;
+            grid-column: 1 / span 3;
+            text-align: right;
+            padding: 5px;
+            padding-top: 20px;
+            padding-bottom: 30px;
+            
+        }
+        .body {
+            grid-row: 2;
+            padding: 5px;
+            padding-top: 25px;
+            padding-bottom: 15px;
+            padding-left: 7px;
+            
+            
+        }
+        .bodycontent {
+            margin-left: 10px;
+        }
+        .bottom {
+            padding-top: 25px;
+            padding-bottom: 40px;
+    
+            grid-column: 1 / span 3;
+            grid-row: 3;
+    
+            text-align: center;
+        }
+        .mainBodyLinks {
+            margin-left: 45px;
+        }
+        .select {
+            margin-left: 20px;
+        }
+        .bodymiddle {
+            padding-left: 20px;
+        }
+        
+    </style>
+</head>
+<body>
+<div class="wrapper1">
+    <div class="box head">
+        Welcome to Football-pages!
+        <select class="select selecthead">something
+            <option id=choose>Choose...</option>
+            <option id=opt1> Fussball</option>
+            <option id=opt2> Tennis</option>
+        </select>
+    </div>
+    <div class="box body bodyleft">
+        <a class="bodycontent mainBodyLinks" href="https://www.othr.de">Studying</a><br>
+        <a class="bodycontent mainBodyLinks" href="">Classes</a><br>
+        <a class="bodycontent mainBodyLinks" href="">ITs</a><br>
+        <a class="bodycontent mainBodyLinks" href="">Government</a><br>
+        <a class="bodycontent mainBodyLinks" href="">Spare time</a><br>
+        <a class="bodycontent mainBodyLinks" href="">Others</a>
+    </div>
+    <div class="box body bodymiddle">
+        <b>Choose something from the list on the left {{title}}, {{{title}}}</b>
+        
+    </div>
+    <div class="box body bodyright">
+        <b>Next Events: </b>
+        <div>
+            {{#each events}}
+                <p>{{@index}}.{{this}}</p>
+            {{/each}}
+        </div>
+    </div>
+    <div class="box bottom">
+        Contact information
+    </div>
+</div>
+</body>
+</html>
