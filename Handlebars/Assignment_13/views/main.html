@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Log in</title>
+</head>
+<body>	
+    {{#if message}}
+	<p style="background-color: lightcoral">{{message}}</p>
+	{{/if}}
+
+	<h1><b>Please log in to see the actual Application!</b></p></h1>
+
+	
+	<form id="loginForm" action="/login" method="post">
+		<label for="username">User name</label>
+		<input type="text" value = "kalle111" name="username" required	/> 
+		<label for="password">Password</label>
+        <input type="text" value="1234" name="password" required /> 		
+        <input type="submit" name="send" value="Log in" />
+	</form>
+</body>
+</html>

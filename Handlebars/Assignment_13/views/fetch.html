@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<html>
+    
+<head>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style>
+    .newEntry {
+        background-color: lightyellow   ;
+    }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!--<script src="localhost:3031/jquery/jquery-3.1.0.js"></script>-->
+    <!--<script src="https://unpkg.com/axios/dist/axios.min.js"></script>-->
+    <!--<script src="C:\Users\kalle\Documents\mwa\Assignment REST\REST_1\libs\jquery-3.1.0.js"></script> -->
+    
+<title>1_4 REST</title>
+</head>
+<body>
+    <form method="GET" action="/logout"><button>logout</button></form><b>----------------------------------</b>
+    
+    {{#if realErrors}}
+    <div id="invalid input" style="background-color: lightcoral">   
+        {{#each realErrors}}
+        INPUT is not good. Info: Field "{{this.param}}" -> {{this.msg}}
+        {{/each}}
+    </div>
+{{/if}}
+<div id="FilterAndFetchDiv">
+    <table id="td1" style="text-align:center; border: 1px solid black;padding-top:0px">
+    Filter:
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Customer_Type</th>
+    </tr>
+    <form id="formID" method="POST" action="/fetchFilteredCustomers"></form>
+    <tr>
+            <td><input id=filterFieldID name="id" type="text" form="formID"></td>
+            <td><input id=filterFieldName name="name" type="text" form="formID"></td>
+            <td><input id=filterFieldAddress name="address" type="text" form="formID"></td>
+            <td><select id="customer_type_selection" name="customer_type" form="formID">
+                <option value="0"> </option>
+                {{#if preFetchCustomerTypes}}
+                    {{#each preFetchCustomerTypes}}
+                        <option value={{this.TypeID}}>{{this.Legend}}</option>
+                    {{/each}}
+                {{/if}}
+                
+            </select></td>
+            
+        </tr>
+        
+        </table>
+        <br>
+        <input type="submit" form="formID" target="_self" style="width: 250px; height:30px"></input>
+    </form>
+        
+    <button id="getselectedprops" onclick="preFetch()" style="visibility: hidden">GetSelIndexJquery</button>
+</div>
+<div id="OutputDiv" style="visibility: visible; padding-top: 20px">
+    {{#if filteredCustomers}}
+        <table id="filteredCustomers">
+            <tr><th>ID</th><th>Name</th><th>Phone</th><th>Address</th><th>Postal Code</th><th>City</th><th>Customer TypeID</th><th>Customer Type</th></tr>
+        {{#each filteredCustomers}}
+            <tr><td>{{this.ID}}</td><td>{{this.Name}}</td><td>{{this.Phone_Number}}</td><td>{{this.Address}}</td><td>{{this.Postal_Code}}</td><td>{{this.City}}</td><td>{{this.Customer_Type}}</td><td>{{this.Legend}}</td></tr>
+        {{/each}}   
+        </table>
+    {{/if}}
+</div>
+
+
+</body>
+</html>
