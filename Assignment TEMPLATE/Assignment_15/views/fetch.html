@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html>
+    
+<head>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style>
+    .newEntry {
+        background-color: lightyellow   ;
+    }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!--<script src="localhost:3031/jquery/jquery-3.1.0.js"></script>-->
+    <!--<script src="https://unpkg.com/axios/dist/axios.min.js"></script>-->
+    <!--<script src="C:\Users\kalle\Documents\mwa\Assignment REST\REST_1\libs\jquery-3.1.0.js"></script> -->
+    
+<title>14</title>
+</head>
+<body> 
+    {{#if realErrors}}
+    <div id="invalid input" style="background-color: lightcoral">   
+        {{#each realErrors}}
+        INPUT is not good. Info: Field "{{this.param}}" -> {{this.msg}}
+        {{/each}}
+    </div>
+{{/if}}
+<div id="FilterAndFetchDiv">
+    <div id=top style="visibility: visible">
+    <table id="td1" style="text-align:center; border: 1px solid black;padding-top:0px;">
+    Filter:<br>
+    ----------------------------<br>
+    <tr>
+        <th>Student ID</th>
+        <th>Name</th>
+    </tr>
+    <form id="formID" method="POST" action="/filtered"></form>
+    <tr>
+            <td><input id=filterFieldID name="studentnumber" type="text" form="formID"></td>
+            <td><input id=filterFieldName name="name" type="text" form="formID"></td>
+                {{#if preFetchCustomerTypes}}
+                    {{#each preFetchCustomerTypes}}
+                    {{/each}}
+                {{/if}}
+        </tr>
+        </table>
+        <br>
+        <input type="submit" form="formID" target="_self" style="width: 359px; height:30px"></input>
+    </div>
+    <button onclick="window.location.reload()" value="refresh" style="visibility: collapse">REFRESH</button>
+    </form ><br>
+    <br>---------------------------------------------------------------------------------------------------------------------------------------------------------------------<br>
+    <form id="newInput" method="POST" action ="/student/add/" style="margin-top:10px;">
+        New Student:<br>
+        ----------------------------<br>
+        <label for="studentnumber">Student number: </label>
+        <input id="studentnumber" name="studentnumber" type="text" form="newInput" required>
+        <br>
+        <label for="name">Student name:</label>
+        <input id="name" name="name" type="text" form="newInput" required>
+        <br>
+        <label for="yearstarted">Year started:</label>
+        <input id="yearstarted" name="yearstarted" type="text" form="newInput" required>
+        <br>
+        <label for="uniname">Uni Name::</label>
+        <input id="uniname" name="uniname" type="text" form="newInput" required>
+        <br>
+        <label for="degree">Degree:</label>
+        <input id="degree" name="degree" type="text" form="newInput" required>
+        <br>
+        <input type="submit" form="newInput" target="_self" style=""></input>      
+    </form>
+    <br>---------------------------------------------------------------------------------------------------------------------------------------------------------------------<br>
+</div>
+<div id="OutputDiv" style="visibility: visible; padding-top: 10px">
+    Output:<br>
+    ---------------------------------<br>
+    {{#if preFetchStudents}}
+    <table id="filteredStudents">
+        <tr><th>ID</th><th>Name</th><th>Year_Started</th><th>University</th><th>Degree</th></tr> 
+        {{#each preFetchStudents}}
+            <tr><td>{{this.studentnumber}}</td><td>{{this.name}}</td><td>{{this.yearstarted}}</td><td>{{this.uniname}}</td><td>{{this.degree}}</td>
+        {{/each}}
+    {{/if}}
+</div>
+
+
+</body>
+</html>
