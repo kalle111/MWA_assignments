@@ -1,5 +1,6 @@
 import React from 'react';
 import { watchFile } from 'fs';
+import './index.css';
 
 class TableClass extends React.Component
 {
@@ -21,9 +22,7 @@ class TableClass extends React.Component
             filtercustomertype:'0',
             loading : false,
             customertypes : [],
-            custtypedropdown: (<select onChange={this.handleChangefiltercustomertype}><option value="">Still loading...</option></select>)
-                
-            ,
+            custtypedropdown: (<select onChange={this.handleChangefiltercustomertype}><option value="">Still loading...</option></select>),
             isPreFetching: true
         }
 
@@ -131,6 +130,7 @@ class TableClass extends React.Component
             let url1 = this.getConditionedUrl();
             
             let data = await fetch(url1);
+            
             //let data_customertype = await fetch("http://localhost:3000/customertype");
             
             let customers = await data.json();
@@ -252,8 +252,8 @@ class TableClass extends React.Component
 
         return(
             <div> 
-                Filter:
-            <table id="td1" style={{textAlign:'center', border: '1px solid black', paddingTop:'0px', marginBottom:'10px', paddingBottom:'10px'}}>
+                <text class="FilterHeader">Filter:</text>
+            <table id="td1" class="TableClasseTable"style={{textAlign:'center', border: '1px solid black', paddingTop:'0px', marginBottom:'10px', paddingBottom:'10px', color:"orange"}}>
                     <thead>
                         <tr>
                             <th>Name</th>

@@ -917,27 +917,6 @@
             "appearences": 27,
             "position": "striker"
          }
-      ],
-      "results": [
-         {
-            "gameId": 1,
-            "opponent": "Werder Bremen",
-            "place": "home",
-            "fixture": "2-0"
-         },
-         {
-            "gameId": 2,
-            "opponent": "VfB Stuttgart",
-            "fixture": "1-1",
-            "place": "away"
-         },
-         {
-            "gameId": 3,
-            "opponent": "Borussia Dortmund",
-            "fixture": "3-4",
-            "place": "away"
-         }
-         
       ]},
      {  
         "TeamInfoId":7,
@@ -988,28 +967,7 @@
           "appearences": 27,
           "position": "striker"
        }
-    ],
-    "results": [
-      {
-         "gameId": 1,
-         "opponent": "Werder Bremen",
-         "place": "home",
-         "fixture": "2-0"
-      },
-      {
-         "gameId": 2,
-         "opponent": "VfB Stuttgart",
-         "fixture": "1-1",
-         "place": "away"
-      },
-      {
-         "gameId": 3,
-         "opponent": "Borussia Dortmund",
-         "fixture": "3-4",
-         "place": "away"
-      }
-      
-   ]},
+    ]},
      {  
         "TeamInfoId":40,
         "TeamName":"FC Bayern",
@@ -1051,29 +1009,7 @@
           "assists": 12,
           "appearences": 27,
           "position": "striker"
-       }
-      ],
-      "results": [
-         {
-            "gameId": 1,
-            "opponent": "Werder Bremen",
-            "place": "home",
-            "fixture": "2-0"
-         },
-         {
-            "gameId": 2,
-            "opponent": "VfB Stuttgart",
-            "fixture": "1-1",
-            "place": "away"
-         },
-         {
-            "gameId": 3,
-            "opponent": "Borussia Dortmund",
-            "fixture": "3-4",
-            "place": "away"
-         }
-         
-      ]
+       }]
      },
      {  
         "TeamInfoId":131,
@@ -1124,28 +1060,7 @@
           "appearences": 27,
           "position": "striker"
        }
-    ],
-    "results": [
-      {
-         "gameId": 1,
-         "opponent": "Werder Bremen",
-         "place": "home",
-         "fixture": "2-0"
-      },
-      {
-         "gameId": 2,
-         "opponent": "VfB Stuttgart",
-         "fixture": "1-1",
-         "place": "away"
-      },
-      {
-         "gameId": 3,
-         "opponent": "Borussia Dortmund",
-         "fixture": "3-4",
-         "place": "away"
-      }
-      
-   ]},
+    ]},
      {  
         "TeamInfoId":175,
         "TeamName":"TSG 1899 Hoffenheim",
@@ -1196,28 +1111,7 @@
           "appearences": 27,
           "position": "striker"
        }
-    ],
-    "results": [
-      {
-         "gameId": 1,
-         "opponent": "Werder Bremen",
-         "place": "home",
-         "fixture": "2-0"
-      },
-      {
-         "gameId": 2,
-         "opponent": "VfB Stuttgart",
-         "fixture": "1-1",
-         "place": "away"
-      },
-      {
-         "gameId": 3,
-         "opponent": "Borussia Dortmund",
-         "fixture": "3-4",
-         "place": "away"
-      }
-      
-   ]
+    ]
      },
      {  
         "TeamInfoId":6,
@@ -1268,28 +1162,7 @@
           "appearences": 27,
           "position": "striker"
        }
-    ],
-    "results": [
-      {
-         "gameId": 1,
-         "opponent": "Werder Bremen",
-         "place": "home",
-         "fixture": "2-0"
-      },
-      {
-         "gameId": 2,
-         "opponent": "VfB Stuttgart",
-         "fixture": "1-1",
-         "place": "away"
-      },
-      {
-         "gameId": 3,
-         "opponent": "Borussia Dortmund",
-         "fixture": "3-4",
-         "place": "away"
-      }
-      
-   ]
+    ]
      },
      {  
         "TeamInfoId":134,
@@ -1340,28 +1213,7 @@
           "appearences": 27,
           "position": "striker"
        }
-    ],
-    "results": [
-      {
-         "gameId": 1,
-         "opponent": "Werder Bremen",
-         "place": "home",
-         "fixture": "2-0"
-      },
-      {
-         "gameId": 2,
-         "opponent": "VfB Stuttgart",
-         "fixture": "1-1",
-         "place": "away"
-      },
-      {
-         "gameId": 3,
-         "opponent": "Borussia Dortmund",
-         "fixture": "3-4",
-         "place": "away"
-      }
-      
-   ]
+    ]
      },
      {  
         "TeamInfoId":54,
@@ -1412,28 +1264,7 @@
           "appearences": 27,
           "position": "striker"
        }
-    ],
-    "results": [
-      {
-         "gameId": 1,
-         "opponent": "Werder Bremen",
-         "place": "home",
-         "fixture": "2-0"
-      },
-      {
-         "gameId": 2,
-         "opponent": "VfB Stuttgart",
-         "fixture": "1-1",
-         "place": "away"
-      },
-      {
-         "gameId": 3,
-         "opponent": "Borussia Dortmund",
-         "fixture": "3-4",
-         "place": "away"
-      }
-      
-   ]
+    ]
      },
      {  
         "TeamInfoId":87,
@@ -1484,28 +1315,7 @@
           "appearences": 27,
           "position": "striker"
        }
-    ],
-    "results": [
-      {
-         "gameId": 1,
-         "opponent": "Werder Bremen",
-         "place": "home",
-         "fixture": "2-0"
-      },
-      {
-         "gameId": 2,
-         "opponent": "VfB Stuttgart",
-         "fixture": "1-1",
-         "place": "away"
-      },
-      {
-         "gameId": 3,
-         "opponent": "Borussia Dortmund",
-         "fixture": "3-4",
-         "place": "away"
-      }
-      
-   ]
+    ]
      },
      {  
         "TeamInfoId":9,
@@ -1556,28 +1366,7 @@
           "appearences": 27,
           "position": "striker"
        }
-    ],
-    "results": [
-      {
-         "gameId": 1,
-         "opponent": "Werder Bremen",
-         "place": "home",
-         "fixture": "2-0"
-      },
-      {
-         "gameId": 2,
-         "opponent": "VfB Stuttgart",
-         "fixture": "1-1",
-         "place": "away"
-      },
-      {
-         "gameId": 3,
-         "opponent": "Borussia Dortmund",
-         "fixture": "3-4",
-         "place": "away"
-      }
-      
-   ]
+    ]
      },
      {  
         "TeamInfoId":112,
@@ -1628,28 +1417,7 @@
           "appearences": 27,
           "position": "striker"
        }
-    ],
-    "results": [
-      {
-         "gameId": 1,
-         "opponent": "Werder Bremen",
-         "place": "home",
-         "fixture": "2-0"
-      },
-      {
-         "gameId": 2,
-         "opponent": "VfB Stuttgart",
-         "fixture": "1-1",
-         "place": "away"
-      },
-      {
-         "gameId": 3,
-         "opponent": "Borussia Dortmund",
-         "fixture": "3-4",
-         "place": "away"
-      }
-      
-   ]
+    ]
      },
      {  
         "TeamInfoId":95,
@@ -1700,28 +1468,7 @@
           "appearences": 27,
           "position": "striker"
        }
-    ],
-    "results": [
-      {
-         "gameId": 1,
-         "opponent": "Werder Bremen",
-         "place": "home",
-         "fixture": "2-0"
-      },
-      {
-         "gameId": 2,
-         "opponent": "VfB Stuttgart",
-         "fixture": "1-1",
-         "place": "away"
-      },
-      {
-         "gameId": 3,
-         "opponent": "Borussia Dortmund",
-         "fixture": "3-4",
-         "place": "away"
-      }
-      
-   ]
+    ]
      },
      {  
         "TeamInfoId":16,
@@ -1772,28 +1519,7 @@
           "appearences": 27,
           "position": "striker"
        }
-    ],
-    "results": [
-      {
-         "gameId": 1,
-         "opponent": "Werder Bremen",
-         "place": "home",
-         "fixture": "2-0"
-      },
-      {
-         "gameId": 2,
-         "opponent": "VfB Stuttgart",
-         "fixture": "1-1",
-         "place": "away"
-      },
-      {
-         "gameId": 3,
-         "opponent": "Borussia Dortmund",
-         "fixture": "3-4",
-         "place": "away"
-      }
-      
-   ]
+    ]
      },
      {  
         "TeamInfoId":55,
@@ -1844,28 +1570,7 @@
           "appearences": 27,
           "position": "striker"
        }
-    ],
-    "results": [
-      {
-         "gameId": 1,
-         "opponent": "Werder Bremen",
-         "place": "home",
-         "fixture": "2-0"
-      },
-      {
-         "gameId": 2,
-         "opponent": "VfB Stuttgart",
-         "fixture": "1-1",
-         "place": "away"
-      },
-      {
-         "gameId": 3,
-         "opponent": "Borussia Dortmund",
-         "fixture": "3-4",
-         "place": "away"
-      }
-      
-   ]
+    ]
      },
      {  
         "TeamInfoId":91,
@@ -1916,28 +1621,7 @@
           "appearences": 27,
           "position": "striker"
        }
-    ],
-    "results": [
-      {
-         "gameId": 1,
-         "opponent": "Werder Bremen",
-         "place": "home",
-         "fixture": "2-0"
-      },
-      {
-         "gameId": 2,
-         "opponent": "VfB Stuttgart",
-         "fixture": "1-1",
-         "place": "away"
-      },
-      {
-         "gameId": 3,
-         "opponent": "Borussia Dortmund",
-         "fixture": "3-4",
-         "place": "away"
-      }
-      
-   ]
+    ]
      },
      {  
         "TeamInfoId":81,
@@ -1988,28 +1672,7 @@
           "appearences": 27,
           "position": "striker"
        }
-    ],
-    "results": [
-      {
-         "gameId": 1,
-         "opponent": "Werder Bremen",
-         "place": "home",
-         "fixture": "2-0"
-      },
-      {
-         "gameId": 2,
-         "opponent": "VfB Stuttgart",
-         "fixture": "1-1",
-         "place": "away"
-      },
-      {
-         "gameId": 3,
-         "opponent": "Borussia Dortmund",
-         "fixture": "3-4",
-         "place": "away"
-      }
-      
-   ]
+    ]
      },
      {  
         "TeamInfoId":185,
@@ -2060,28 +1723,7 @@
           "appearences": 27,
           "position": "striker"
        }
-    ],
-    "results": [
-      {
-         "gameId": 1,
-         "opponent": "Werder Bremen",
-         "place": "home",
-         "fixture": "2-0"
-      },
-      {
-         "gameId": 2,
-         "opponent": "VfB Stuttgart",
-         "fixture": "1-1",
-         "place": "away"
-      },
-      {
-         "gameId": 3,
-         "opponent": "Borussia Dortmund",
-         "fixture": "3-4",
-         "place": "away"
-      }
-      
-   ]
+    ]
      },
      {  
         "TeamInfoId":79,
@@ -2132,28 +1774,7 @@
           "appearences": 27,
           "position": "striker"
        }
-    ],
-    "results": [
-      {
-         "gameId": 1,
-         "opponent": "Werder Bremen",
-         "place": "home",
-         "fixture": "2-0"
-      },
-      {
-         "gameId": 2,
-         "opponent": "VfB Stuttgart",
-         "fixture": "1-1",
-         "place": "away"
-      },
-      {
-         "gameId": 3,
-         "opponent": "Borussia Dortmund",
-         "fixture": "3-4",
-         "place": "away"
-      }
-      
-   ]
+    ]
      }
   ],
   "profile": {

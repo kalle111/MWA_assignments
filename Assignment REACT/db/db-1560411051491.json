@@ -1,0 +1,69 @@
+{
+  "customer": [
+    {
+      "id": 1,
+      "name": "Daniel Düsentrieb",
+      "address": "Ostengasse 4c, Regensburg",
+      "phone_number": "01632171112",
+      "age": "66",
+      "education": "B.A. Business administration",
+      "customertype": "1"
+    },
+    {
+      "id": 2,
+      "name": "Megan Fox",
+      "address": "East Driveway 32nd, Los Angeles",
+      "phone_number": "+089/18064242",
+      "age": "37",
+      "education": "B.A. Acting",
+      "customertype": "1"
+    },
+    {
+      "id": 3,
+      "name": "Dagobert Duck",
+      "address": "Ostengasse 4c, Regensburg",
+      "phone_number": "01632171112",
+      "age": "66",
+      "education": "Basic Knowledge Cert.",
+      "customertype": "2"
+    },
+    {
+      "id": 4,
+      "name": "Martin Schmidt",
+      "address": "Frauentor 37, Nuremberg",
+      "phone_number": "01701566666",
+      "age": "91",
+      "education": "Advanced vocational certificate of education (college)",
+      "customertype": "2"
+    },
+    {
+      "id": 5,
+      "name": "Constantin Haberle",
+      "address": "Am Sand 1, Neumarkt",
+      "phone_number": "01731324666",
+      "age": "15",
+      "education": "Highschool Certificate",
+      "customertype": "1"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "customertype": [
+    {
+      "customerid": "1",
+      "typename": "Business customer"
+    },
+    {
+      "customerid": "2",
+      "typename": "Private customer"
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}
