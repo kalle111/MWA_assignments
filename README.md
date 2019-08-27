@@ -3,4 +3,4 @@ Miscellaneous data regarding elective module 'Modern web applications with React
 
 * 30 assignments to be made prior to the final projects. 
 
-Note: Some assignment used the JSON-server framework used instead of a real Restful api. 
+Note: Some solutions used the JSON-server framework used instead of a real Restful api. 
